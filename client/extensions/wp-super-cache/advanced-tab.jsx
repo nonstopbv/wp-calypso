@@ -21,8 +21,8 @@ import WrapSettingsForm from './wrap-settings-form';
 
 const AdvancedTab = ( {
 	fields: {
+		cache_enabled,
 		super_cache_enabled,
-		wp_cache_enabled,
 	},
 	siteUrl,
 } ) => {
@@ -36,17 +36,21 @@ const AdvancedTab = ( {
 			<AcceptedFilenames />
 			<RejectedUserAgents />
 			<LockDown />
-			{	!! wp_cache_enabled && ( '1' === super_cache_enabled || '2' === super_cache_enabled ) &&
+			{	!! cache_enabled && ( '1' === super_cache_enabled || '2' === super_cache_enabled ) &&
 				<DirectlyCachedFiles siteUrl={ siteUrl } />
 			}
 			<FixConfig />
 		</div>
 	);
 };
+
+// If super cache is disabled then only legacy caching is done.
+// But legacy caching is always on UNLESS, the "don't cache for known users" is enabled,
+// and probably also the one about not caching urls with GET parameters.
 const getFormSettings = settings => {
 	return pick( settings, [
+		'cache_enabled',
 		'super_cache_enabled',
-		'wp_cache_enabled',
 	] );
 };
 

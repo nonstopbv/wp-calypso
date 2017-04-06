@@ -83,7 +83,7 @@ const ContentsTab = ( {
 						{ translate(
 							'Cache stats last generated: %(generated)d minutes ago.',
 							{
-								args: { generated: generated || 0 },
+								args: { generated },
 							}
 						) }
 					</p>
@@ -144,12 +144,19 @@ const ContentsTab = ( {
 		</div>
 	);
 };
+
 const getFormSettings = settings => {
-	const cacheStats = pick( settings.cache_stats, [
-		'generated',
-		'supercache',
-		'wpcache',
-	] );
+	// TODO: Handle null settings.
+	let cacheStats = {};
+
+	if ( settings.cache_stats ) {
+		cacheStats = pick( settings.cache_stats, [
+			'generated',
+			'supercache',
+			'wpcache',
+		] );
+	}
+
 	const otherSettings = pick( settings, [
 		'cache_max_time',
 		'wp_cache_object_cache',
