@@ -31,7 +31,7 @@ const MasterbarLoggedOut = ( { title, sectionName, translate } ) => (
 			}
 
 			{ 'login' !== sectionName
-			?	<Item url={ config( 'login_url' ) }>
+			?	<Item url={ config( 'login_url' ) + '?redirect_to=' + encodeURIComponent( window.location.href ) }>
 					{ translate( 'Log In', {
 						context: 'Toolbar',
 						comment: 'Should be shorter than ~12 chars',

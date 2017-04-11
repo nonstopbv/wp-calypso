@@ -12,10 +12,12 @@ import noop from 'lodash/noop';
  * Internal dependencies
  */
 import { createReduxStore } from 'state';
+import useFakeDom from 'test/helpers/use-fake-dom';
 
 describe( 'index', function() {
 	context( 'when trying to renderToString() LayoutLoggedOut ', function() {
 		useMockery();
+		useFakeDom();
 
 		before( function() {
 			mockery.registerMock( 'lib/analytics', noop );
