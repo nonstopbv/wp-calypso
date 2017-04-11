@@ -5,7 +5,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 import page from 'page';
-import { pickBy } from 'lodash';
+import { get, pickBy } from 'lodash';
 import Gridicon from 'gridicons';
 
 /**
@@ -24,6 +24,7 @@ import { getCurrentUserId } from 'state/current-user/selectors';
 import ThemePreview from './theme-preview';
 import config from 'config';
 import { isATEnabledForCurrentSite } from 'lib/automated-transfer';
+import { getThemeFilterTerm } from 'state/selectors';
 
 const ThemesSearchCard = config.isEnabled( 'manage/themes/magic-search' )
 	? require( './themes-magic-search-card' )
@@ -135,7 +136,7 @@ const ThemeShowcase = React.createClass( {
 		const tier = config.isEnabled( 'upgrades/premium-themes' ) ? this.props.tier : 'free';
 
 		const metas = [
-			{ name: 'description', property: 'og:description', content: themesMeta[ tier ].description },
+			{ name: 'description', property: 'og:description', content: this.props.description },
 			{ property: 'og:url', content: themesMeta[ tier ].canonicalUrl },
 			{ property: 'og:type', content: 'website' }
 		];
@@ -198,9 +199,10 @@ const ThemeShowcase = React.createClass( {
 } );
 
 export default connect(
-	( state, { siteId } ) => ( {
+	( state, { siteId, vertical } ) => ( {
 		isLoggedIn: !! getCurrentUserId( state ),
 		siteSlug: getSiteSlug( state, siteId ),
 		isJetpack: isJetpackSite( state, siteId ),
+		description: get( getThemeFilterTerm( state, 'subject', vertical ), 'description' ),
 	} )
 )( localize( ThemeShowcase ) );
