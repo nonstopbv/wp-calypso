@@ -65,6 +65,9 @@ export getSiteIconUrl from './get-site-icon-url';
 export getSiteSetting from './get-site-setting';
 export getSiteStatsQueryDate from './get-site-stats-query-date';
 export getSiteStatsViewSummary from './get-site-stats-view-summary';
+export getThemeFilters from './get-theme-filters';
+export getThemeFilterTerm from './get-theme-filter-term';
+export getThemeFilterTerms from './get-theme-filter-terms';
 export getTimezones from './get-timezones';
 export getSiteTimezoneName from './get-site-timezone-name';
 export getSiteTimezoneValue from './get-site-timezone-value';
@@ -126,4 +129,3 @@ export isUpdatingJetpackSettings from './is-updating-jetpack-settings';
 export isUserRegistrationDaysWithinRange from './is-user-registration-days-within-range';
 export shouldCloseVideoEditorModal from './should-close-video-editor-modal';
 export shouldShowVideoEditorError from './should-show-video-editor-error';
-
