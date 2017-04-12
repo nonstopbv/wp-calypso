@@ -32,7 +32,7 @@ class MapDomain extends Component {
 		selectedSite: PropTypes.object,
 		getSelectedSiteSlug: PropTypes.string,
 		domainsWithPlansOnly: PropTypes.bool.isRequired,
-		isSiteUpgradeable: PropTypes.bool,
+		isSiteUpgradeable: PropTypes.func.isRequired,
 		productsList: PropTypes.object.isRequired,
 		translate: PropTypes.func.isRequired,
 	};
@@ -96,15 +96,17 @@ class MapDomain extends Component {
 	};
 
 	componentDidMount() {
-		this.checkSiteIsUpgradeable();
+		this.checkSiteIsUpgradeable( this.props.selectedSiteId );
 	}
 
-	componentWillReceiveProps() {
-		this.checkSiteIsUpgradeable();
+	componentWillReceiveProps( nextProps ) {
+		if ( nextProps.selectedSiteId !== this.props.selectedSiteId ) {
+			this.checkSiteIsUpgradeable( nextProps.selectedSiteId );
+		}
 	}
 
-	checkSiteIsUpgradeable() {
-		if ( this.props.selectedSite && ! this.props.isSiteUpgradeable ) {
+	checkSiteIsUpgradeable( siteId ) {
+		if ( siteId && ! this.props.isSiteUpgradeable( siteId ) ) {
 			page.redirect( '/domains/add' );
 		}
 	}
@@ -151,9 +153,10 @@ class MapDomain extends Component {
 export default connect(
 	( state ) => ( {
 		selectedSite: getSelectedSite( state ),
+		selectedSiteId: getSelectedSiteId( state ),
 		selectedSiteSlug: getSelectedSiteSlug( state ),
 		domainsWithPlansOnly: currentUserHasFlag( state, DOMAINS_WITH_PLANS_ONLY ),
-		isSiteUpgradeable: isSiteUpgradeable( state, getSelectedSiteId( state ) ),
+		isSiteUpgradeable: site => isSiteUpgradeable( state, site.ID ),
 		productsList: state.productsList.items,
 	} )
 )( localize( MapDomain ) );
