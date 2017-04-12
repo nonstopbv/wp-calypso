@@ -37,15 +37,9 @@ class MapDomain extends Component {
 		translate: PropTypes.func.isRequired,
 	};
 
-	constructor() {
-		super();
-		this.handleRegisterDomain = this.handleRegisterDomain.bind( this );
-		this.handleMapDomain = this.handleMapDomain.bind( this );
-		this.goBack = this.goBack.bind( this );
-		this.state = {
-			errorMessage: null
-		};
-	}
+	state = {
+		errorMessage: null
+	};
 
 	componentDidMount() {
 		this.checkSiteIsUpgradeable();
@@ -61,7 +55,7 @@ class MapDomain extends Component {
 		}
 	}
 
-	goBack() {
+	goBack = () => {
 		const {
 			selectedSite,
 			selectedSiteSlug,
@@ -78,9 +72,9 @@ class MapDomain extends Component {
 		}
 
 		page( '/domains/add/' + selectedSiteSlug );
-	}
+	};
 
-	handleRegisterDomain( suggestion ) {
+	handleRegisterDomain = ( suggestion ) => {
 		const { selectedSiteSlug } = this.props;
 
 		upgradesActions.addItem(
@@ -91,9 +85,9 @@ class MapDomain extends Component {
 		);
 
 		page( '/checkout/' + selectedSiteSlug );
-	}
+	};
 
-	handleMapDomain( domain ) {
+	handleMapDomain = ( domain ) => {
 		const { selectedSite, selectedSiteSlug } = this.props;
 
 		this.setState( { errorMessage: null } );
@@ -113,7 +107,7 @@ class MapDomain extends Component {
 		upgradesActions.addItem( cartItems.domainMapping( { domain } ) );
 
 		page( '/checkout/' + selectedSiteSlug );
-	}
+	};
 
 	render() {
 		const {
