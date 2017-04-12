@@ -68,6 +68,7 @@ export getSiteStatsViewSummary from './get-site-stats-view-summary';
 export getThemeFilters from './get-theme-filters';
 export getThemeFilterTerm from './get-theme-filter-term';
 export getThemeFilterTerms from './get-theme-filter-terms';
+export getThemeShowcaseDescription from './get-theme-showcase-description';
 export getTimezones from './get-timezones';
 export getSiteTimezoneName from './get-site-timezone-name';
 export getSiteTimezoneValue from './get-site-timezone-value';
