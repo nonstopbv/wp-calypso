@@ -200,7 +200,7 @@ export class EditGravatar extends Component {
 						{ translate( '{{p}}The avatar you use on WordPress.com comes ' +
 							'from {{ExternalLink}}Gravatar{{/ExternalLink}} - a universal avatar service.{{/p}}' +
 							'{{p}}Your photo may be displayed on other sites where ' +
-							'you use your email address rockstar@email.com.{{/p}}',
+							'you use your email address %(email)s.{{/p}}',
 							{
 								components: {
 									ExternalLink: <ExternalLink
