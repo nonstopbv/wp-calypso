@@ -15,6 +15,11 @@ describe( 'getThemeShowcaseDescription()', () => {
 		expect( description ).to.equal( 'Whether you\'re authoring a personal blog, professional blog, or a business blog — ...' );
 	} );
 
+	it( 'should return the filter description for a known filter', () => {
+		const description = getThemeShowcaseDescription( state, { filter: 'minimal' } );
+		expect( description ).to.equal( 'Whether you\'re minimalist at heart, like keeping things clean, or just want to focus — ...' );
+	} );
+
 	it( 'should fall back to the tier description for an unknown vertical', () => {
 		const description = getThemeShowcaseDescription( state, { vertical: 'blahg', tier: 'free' } );
 		expect( description ).to.equal( 'Discover Free WordPress Themes on the WordPress.com Theme Showcase.' );

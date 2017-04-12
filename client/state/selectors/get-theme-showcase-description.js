@@ -1,17 +1,26 @@
 /**
  * External dependencies
  */
-import { get } from 'lodash';
+import { get, includes } from 'lodash';
 
 /**
  * Internal dependencies
  */
-import { getThemeFilterTerm } from './';
+import { findThemeFilterTerm, getThemeFilterTerm } from './';
 
-export default function getThemeShowcaseDescription( state, { tier, vertical } = {} ) {
+export default function getThemeShowcaseDescription( state, { filter, tier, vertical } = {} ) {
+	// If we have a vertical, use its description
 	const description = get( getThemeFilterTerm( state, 'subject', vertical ), 'description' );
 	if ( description ) {
 		return description;
+	}
+
+	// If we have *one* filter, use its description
+	if ( filter && ! includes( filter, ',' ) ) {
+		const filterDescription = get( findThemeFilterTerm( state, filter ), 'description' );
+		if ( filterDescription ) {
+			return filterDescription;
+		}
 	}
 
 	if ( tier === 'free' ) {

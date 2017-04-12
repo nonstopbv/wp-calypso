@@ -196,10 +196,10 @@ const ThemeShowcase = React.createClass( {
 } );
 
 export default connect(
-	( state, { siteId, tier, vertical } ) => ( {
+	( state, { siteId, filter, tier, vertical } ) => ( {
 		isLoggedIn: !! getCurrentUserId( state ),
 		siteSlug: getSiteSlug( state, siteId ),
 		isJetpack: isJetpackSite( state, siteId ),
-		description: getThemeShowcaseDescription( state, { tier, vertical } ),
+		description: getThemeShowcaseDescription( state, { filter, tier, vertical } ),
 	} )
 )( localize( ThemeShowcase ) );
