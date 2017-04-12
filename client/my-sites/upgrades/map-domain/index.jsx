@@ -2,7 +2,7 @@
  * External dependencies
  */
 import page from 'page';
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 
@@ -26,15 +26,15 @@ const wpcom = wp.undocumented();
 
 class MapDomain extends Component {
 	static propTypes = {
-		initialQuery: React.PropTypes.string,
-		query: React.PropTypes.string,
-		cart: React.PropTypes.object.isRequired,
-		selectedSite: React.PropTypes.object,
-		getSelectedSiteSlug: React.PropTypes.string,
-		domainsWithPlansOnly: React.PropTypes.bool.isRequired,
-		isSiteUpgradeable: React.PropTypes.bool,
-		productsList: React.PropTypes.object.isRequired,
-		translate: React.PropTypes.func.isRequired,
+		initialQuery: PropTypes.string,
+		query: PropTypes.string,
+		cart: PropTypes.object.isRequired,
+		selectedSite: PropTypes.object,
+		getSelectedSiteSlug: PropTypes.string,
+		domainsWithPlansOnly: PropTypes.bool.isRequired,
+		isSiteUpgradeable: PropTypes.bool,
+		productsList: PropTypes.object.isRequired,
+		translate: PropTypes.func.isRequired,
 	};
 
 	constructor() {
