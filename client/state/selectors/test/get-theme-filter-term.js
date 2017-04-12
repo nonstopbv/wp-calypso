@@ -10,17 +10,17 @@ import { getThemeFilterTerm } from '../';
 import { state } from './fixtures/theme-filters';
 
 describe( 'getThemeFilterTerm()', () => {
-	it( 'should return undefined for an inexistent filter name', () => {
+	it( 'should return undefined for an inexistent filter slug', () => {
 		const term = getThemeFilterTerm( state, 'object', 'blog' );
 		expect( term ).to.be.undefined;
 	} );
 
-	it( 'should return undefined for an inexistent term name', () => {
+	it( 'should return undefined for an inexistent term slug', () => {
 		const term = getThemeFilterTerm( state, 'subject', 'blahg' );
 		expect( term ).to.be.undefined;
 	} );
 
-	it( 'should return the filter term object for a given filter and term name', () => {
+	it( 'should return the filter term object for a given filter and term slug', () => {
 		const term = getThemeFilterTerm( state, 'subject', 'blog' );
 		expect( term ).to.deep.equal( {
 			name: 'Blog',
