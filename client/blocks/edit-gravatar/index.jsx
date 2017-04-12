@@ -32,6 +32,7 @@ import {
 } from 'state/current-user/gravatar-status/actions';
 import ImageEditor from 'blocks/image-editor';
 import InfoPopover from 'components/info-popover';
+import ExternalLink from 'components/external-link';
 
 /**
  * Module dependencies
@@ -194,15 +195,16 @@ export class EditGravatar extends Component {
 					<p className="edit-gravatar__explanation">Your profile photo is public.</p>
 					<InfoPopover position="left">
 						{ translate( '{{p}}The avatar you use on WordPress.com comes ' +
-							'from {{a}}Gravatar{{/a}} - a universal avatar service.{{/p}}' +
+							'from {{ExternalLink}}Gravatar{{/ExternalLink}} - a universal avatar service.{{/p}}' +
 							'{{p}}Your photo may be displayed on other sites where ' +
 							'you use your email address rockstar@email.com.{{/p}}',
 							{
 								components: {
-									a: <a
+									ExternalLink: <ExternalLink
 										href={ gravatarLink }
 										target="_blank"
-										rel="noopener noreferrer" />,
+										rel="noopener noreferrer"
+										icon={ true } />,
 									p: <p />
 								},
 								args: {

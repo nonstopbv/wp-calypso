@@ -12,6 +12,7 @@ import Animate from 'components/animate';
 import Gravatar from 'components/gravatar';
 import eventRecorder from 'me/event-recorder';
 import { isEnabled } from 'config';
+import ExternalLink from 'components/external-link';
 
 const debug = debugFactory( 'calypso:me:sidebar-gravatar' );
 
@@ -33,7 +34,12 @@ const ProfileGravatar = React.createClass( {
 					<Gravatar user={ this.props.user } size={ 150 } imgSize={ 400 } />
 					<h2 className="profile-gravatar__user-display-name">{ this.props.user.display_name }</h2>
 					<div className="profile-gravatar__user-secondary-info">
-						<a href={ profileURL } target="_blank" rel="noopener noreferrer">@{ this.props.user.username }</a>
+						<ExternalLink
+							href={ profileURL }
+							target="_blank"
+							rel="noopener noreferrer" >
+							@{ this.props.user.username }
+						</ExternalLink>
 					</div>
 				</div>
 			);
@@ -42,7 +48,7 @@ const ProfileGravatar = React.createClass( {
 		return (
 			<div className="profile-gravatar">
 				<Animate type="appear">
-					<a
+					<ExternalLink
 						href="https://secure.gravatar.com/site/wpcom?wpcc-no-close"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -56,11 +62,16 @@ const ProfileGravatar = React.createClass( {
 								{ this.props.translate( 'Update Profile Photo' ) }
 							</span>
 						</span>
-					</a>
+					</ExternalLink>
 				</Animate>
 				<h2 className="profile-gravatar__user-display-name">{ this.props.user.display_name }</h2>
 				<div className="profile-gravatar__user-secondary-info">
-					<a href={ profileURL } target="_blank" rel="noopener noreferrer">@{ this.props.user.username }</a>
+					<ExternalLink
+						href={ profileURL }
+						target="_blank"
+						rel="noopener noreferrer" >
+						@{ this.props.user.username }
+					</ExternalLink>
 				</div>
 			</div>
 		);
