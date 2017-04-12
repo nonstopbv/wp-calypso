@@ -41,20 +41,6 @@ class MapDomain extends Component {
 		errorMessage: null
 	};
 
-	componentDidMount() {
-		this.checkSiteIsUpgradeable();
-	}
-
-	componentWillReceiveProps() {
-		this.checkSiteIsUpgradeable();
-	}
-
-	checkSiteIsUpgradeable() {
-		if ( this.props.selectedSite && ! this.props.isSiteUpgradeable ) {
-			page.redirect( '/domains/add' );
-		}
-	}
-
 	goBack = () => {
 		const {
 			selectedSite,
@@ -108,6 +94,20 @@ class MapDomain extends Component {
 
 		page( '/checkout/' + selectedSiteSlug );
 	};
+
+	componentDidMount() {
+		this.checkSiteIsUpgradeable();
+	}
+
+	componentWillReceiveProps() {
+		this.checkSiteIsUpgradeable();
+	}
+
+	checkSiteIsUpgradeable() {
+		if ( this.props.selectedSite && ! this.props.isSiteUpgradeable ) {
+			page.redirect( '/domains/add' );
+		}
+	}
 
 	render() {
 		const {
