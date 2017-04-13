@@ -196,7 +196,9 @@ export class EditGravatar extends Component {
 				</FilePicker>
 				<div>
 					<p className="edit-gravatar__explanation">Your profile photo is public.</p>
-					<InfoPopover position="left">
+					<InfoPopover
+						className="edit-gravatar__pop-over"
+						position="left" >
 						{ translate( '{{p}}The avatar you use on WordPress.com comes ' +
 							'from {{ExternalLink}}Gravatar{{/ExternalLink}} - a universal avatar service.{{/p}}' +
 							'{{p}}Your photo may be displayed on other sites where ' +
