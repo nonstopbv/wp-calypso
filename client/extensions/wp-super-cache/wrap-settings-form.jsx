@@ -207,6 +207,7 @@ const wrapSettingsForm = getFormSettings => SettingsForm => {
 				},
 
 				// Preload
+				is_preload_enabled: true,
 				minimum_preload_interval: 30,
 				preload_email_volume: 'none',
 				preload_interval: 30,
