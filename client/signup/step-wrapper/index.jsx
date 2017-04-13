@@ -83,4 +83,4 @@ export default localize( React.createClass( {
 			</div>
 		);
 	}
-} ));
+} ) );
