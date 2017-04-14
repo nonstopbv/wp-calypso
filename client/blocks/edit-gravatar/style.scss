@@ -100,3 +100,11 @@
 .edit-gravatar__pop-over .external-link .gridicons-external { // specificity used to override margin
 	margin-left: 1px;
 }
+
+.edit-gravatar__unverified-user .file-picker {
+	pointer-events: none;
+}
+
+.edit-gravatar__unverified-user .gravatar {
+	opacity: 0.33;
+}
