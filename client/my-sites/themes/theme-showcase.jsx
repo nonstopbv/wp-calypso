@@ -24,6 +24,7 @@ import { getCurrentUserId } from 'state/current-user/selectors';
 import ThemePreview from './theme-preview';
 import config from 'config';
 import { isATEnabledForCurrentSite } from 'lib/automated-transfer';
+import { recordTracksEvent } from 'state/analytics/actions';
 
 const ThemesSearchCard = config.isEnabled( 'manage/themes/magic-search' )
 	? require( './themes-magic-search-card' )
@@ -66,6 +67,7 @@ const ThemeShowcase = React.createClass( {
 		secondaryOption: optionShape,
 		getScreenshotOption: PropTypes.func,
 		siteSlug: PropTypes.string,
+		trackATUploadClick: PropTypes.func,
 	},
 
 	getDefaultProps() {
@@ -109,6 +111,9 @@ const ThemeShowcase = React.createClass( {
 
 	onUploadClick() {
 		trackClick( 'upload theme' );
+		if ( isATEnabledForCurrentSite() ) {
+			this.props.trackATUploadClick();
+		}
 	},
 
 	showUploadButton() {
@@ -197,10 +202,13 @@ const ThemeShowcase = React.createClass( {
 	}
 } );
 
-export default connect(
-	( state, { siteId } ) => ( {
-		isLoggedIn: !! getCurrentUserId( state ),
-		siteSlug: getSiteSlug( state, siteId ),
-		isJetpack: isJetpackSite( state, siteId ),
-	} )
-)( localize( ThemeShowcase ) );
+const mapStateToProps = ( state, { siteId } ) => ( {
+	isLoggedIn: !! getCurrentUserId( state ),
+	siteSlug: getSiteSlug( state, siteId ),
+	isJetpack: isJetpackSite( state, siteId ),
+} );
+
+const mapDispatchToProps = {
+	trackATUploadClick: () => recordTracksEvent( 'calypso_automated_transfer_click_theme_upload' )
+};
+export default connect( mapStateToProps, mapDispatchToProps )( localize( ThemeShowcase ) );
