@@ -11,9 +11,9 @@ import { uniq, startsWith } from 'lodash';
  * Internal Dependencies
  */
 import userFactory from 'lib/user';
-import sitesFactory from 'lib/sites-list';
 import { receiveSite } from 'state/sites/actions';
-import { getSite } from 'state/sites/selectors';
+import { getSite, isRequestingSite } from 'state/sites/selectors';
+import { getSelectedSite } from 'state/ui/selectors';
 import {
 	setSelectedSiteId,
 	setSection,
@@ -29,7 +29,11 @@ import analytics from 'lib/analytics';
 import utils from 'lib/site/utils';
 import { setLayoutFocus } from 'state/ui/layout-focus/actions';
 import { renderWithReduxStore } from 'lib/react-helpers';
-import isDomainOnlySite from 'state/selectors/is-domain-only-site';
+import {
+	getPrimarySiteId,
+	getSites,
+	isDomainOnlySite,
+} from 'state/selectors';
 import {
 	domainManagementAddGoogleApps,
 	domainManagementContactsPrivacy,
@@ -49,11 +53,15 @@ import {
 import SitesComponent from 'my-sites/sites';
 import { isATEnabledForCurrentSite } from 'lib/automated-transfer';
 
+const getStore = ( context ) => ( {
+	state: context.store.getState(),
+	getDispatch: ( action ) => context.store.dispatch( action ),
+} );
+
 /**
  * Module vars
  */
 const user = userFactory();
-const sites = sitesFactory();
 const sitesPageTitleForAnalytics = 'Sites';
 
 /*
@@ -172,27 +180,27 @@ function isPathAllowedForDomainOnlySite( path, domainName ) {
 }
 
 function onSelectedSiteAvailable( context ) {
-	const selectedSite = sites.getSelectedSite();
-	const getState = () => context.store.getState();
+	const { state } = getStore( context );
+	const selectedSite = getSelectedSite( state );
 
 	// Currently, sites are only made available in Redux state by the receive
 	// here (i.e. only selected sites). If a site is already known in state,
 	// avoid receiving since we risk overriding changes made more recently.
-	if ( ! getSite( getState(), selectedSite.ID ) ) {
+	if ( ! getSite( state, selectedSite.ID ) ) {
 		context.store.dispatch( receiveSite( selectedSite ) );
 	}
 
 	context.store.dispatch( setSelectedSiteId( selectedSite.ID ) );
 
-	if ( isDomainOnlySite( getState(), selectedSite.ID ) &&
+	if ( isDomainOnlySite( state, selectedSite.ID ) &&
 		! isPathAllowedForDomainOnlySite( context.pathname, selectedSite.slug ) ) {
 		renderSelectedSiteIsDomainOnly( context, selectedSite );
 		return false;
 	}
 
 	// Update recent sites preference
-	if ( hasReceivedRemotePreferences( getState() ) ) {
-		const recentSites = getPreference( getState(), 'recentSites' );
+	if ( hasReceivedRemotePreferences( state ) ) {
+		const recentSites = getPreference( state, 'recentSites' );
 		if ( selectedSite.ID !== recentSites[ 0 ] ) {
 			context.store.dispatch( savePreference( 'recentSites', uniq( [
 				selectedSite.ID,
@@ -221,7 +229,6 @@ function createSitesComponent( context ) {
 
 	return (
 		<SitesComponent
-			sites={ sites }
 			path={ context.path }
 			sourcePath={ sourcePath }
 			user={ user }
@@ -234,14 +241,19 @@ module.exports = {
 	 * Set up site selection based on last URL param and/or handle no-sites error cases
 	 */
 	siteSelection( context, next ) {
+		const { state, dispatch } = getStore( context );
+
 		const siteID = route.getSiteFragment( context.path );
 		const basePath = route.sectionify( context.path );
 		const currentUser = user.get();
 		const hasOneSite = currentUser.visible_site_count === 1;
 		const allSitesPath = route.sectionify( context.path );
+		const primaryId = getPrimarySiteId( state );
+		const primary = getSite( state, primaryId ) || '';
+		const hasInitialized = !! getSites( state );
 
 		const redirectToPrimary = () => {
-			let redirectPath = `${ context.pathname }/${ sites.getPrimary().slug }`;
+			let redirectPath = `${ context.pathname }/${ primary.slug }`;
 
 			redirectPath = context.querystring
 				? `${ redirectPath }?${ context.querystring }`
@@ -270,7 +282,7 @@ module.exports = {
 		// If the user has only one site, redirect to the single site
 		// context instead of rendering the all-site views.
 		if ( hasOneSite && ! siteID ) {
-			if ( sites.initialized ) {
+			if ( hasInitialized ) {
 				redirectToPrimary();
 				return;
 			}
@@ -279,14 +291,15 @@ module.exports = {
 
 		// If the path fragment does not resemble a site, set all sites to visible
 		if ( ! siteID ) {
-			sites.selectAll();
-			context.store.dispatch( setAllSitesSelected() );
+			dispatch( setAllSitesSelected() );
 			return next();
 		}
 
 		// If there's a valid site from the url path
 		// set site visibility to just that site on the picker
-		if ( sites.select( siteID ) ) {
+		const didFindSite = !! getSite( state, siteID );
+		dispatch( setSelectedSiteId( siteID ) );
+		if ( didFindSite ) {
 			const selectionComplete = onSelectedSiteAvailable( context );
 
 			// if there was a redirect, we should terminate processing of next routes
@@ -297,7 +310,7 @@ module.exports = {
 		} else {
 			// if sites has fresh data and siteID is invalid
 			// redirect to allSitesPath
-			if ( sites.fetched || ! sites.fetching ) {
+			if ( ! isRequestingSite( state, siteID ) ) {
 				return page.redirect( allSitesPath );
 			}
 
@@ -421,7 +434,7 @@ module.exports = {
 		 * Sites is rendered on #primary but it doesn't expect a sidebar to exist
 		 */
 		removeSidebar( context );
-		context.store.dispatch( setLayoutFocus( 'content' ) );
+		dispatch( setLayoutFocus( 'content' ) );
 
 		renderWithReduxStore(
 			createSitesComponent( context ),
