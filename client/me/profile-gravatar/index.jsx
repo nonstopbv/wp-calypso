@@ -1,29 +1,38 @@
 /**
  * External dependencies
  */
-import React from 'react';
+import React, { Component } from 'react';
 import debugFactory from 'debug';
 import { localize } from 'i18n-calypso';
+import { connect } from 'react-redux';
 
 /**
  * Internal dependencies
  */
 import Animate from 'components/animate';
 import Gravatar from 'components/gravatar';
-import eventRecorder from 'me/event-recorder';
 import { isEnabled } from 'config';
 import ExternalLink from 'components/external-link';
+import { recordGoogleEvent } from 'state/analytics/actions';
 
 const debug = debugFactory( 'calypso:me:sidebar-gravatar' );
 
-const ProfileGravatar = React.createClass( {
-	displayName: 'ProfileGravatar',
-
-	mixins: [ eventRecorder ],
-
+class ProfileGravatar extends Component {
 	componentDidMount() {
 		debug( 'The ProfileGravatar component is mounted.' );
-	},
+	}
+
+	handleImageClick = () => {
+		this.props.recordGoogleEvent( 'Me',
+			'Clicked on Unclickable Gravatar Image in Sidebar'
+		);
+	}
+
+	handleExternalLinkClick = () => {
+		this.props.recordGoogleEvent( 'Me',
+			'Clicked on Gravatar Update Profile Photo in Sidebar'
+		);
+	}
 
 	render() {
 		const profileURL = `https://gravatar.com/${ this.props.user.username }`;
@@ -34,7 +43,9 @@ const ProfileGravatar = React.createClass( {
 		if ( isEnabled( 'me/edit-gravatar' ) ) {
 			return (
 				<div className="profile-gravatar">
-					<Gravatar user={ this.props.user } size={ 150 } imgSize={ GRAVATAR_IMG_SIZE } />
+					<div className="profile-gravatar__gravatar-container" onClick={ this.handleImageClick }>
+						<Gravatar user={ this.props.user } size={ 150 } imgSize={ GRAVATAR_IMG_SIZE } />
+					</div>
 					<h2 className="profile-gravatar__user-display-name">{ this.props.user.display_name }</h2>
 					<div className="profile-gravatar__user-secondary-info">
 						<ExternalLink
@@ -56,7 +67,7 @@ const ProfileGravatar = React.createClass( {
 						target="_blank"
 						rel="noopener noreferrer"
 						className="profile-gravatar__edit"
-						onClick={ this.recordClickEvent( 'Gravatar Update Profile Photo in Sidebar' ) } >
+						onClick={ this.handleExternalLinkClick } >
 
 						<Gravatar user={ this.props.user } size={ 150 } imgSize={ GRAVATAR_IMG_SIZE } />
 
@@ -79,6 +90,8 @@ const ProfileGravatar = React.createClass( {
 			</div>
 		);
 	}
-} );
+}
 
-export default localize( ProfileGravatar );
+export default connect( null, {
+	recordGoogleEvent
+} )( localize( ProfileGravatar ) );
