@@ -98,7 +98,5 @@
 }
 
 .edit-gravatar__pop-over .external-link .gridicons-external { // specificity used to override margin
-	margin-bottom: -2px;
 	margin-left: 1px;
-	transform: scale(calc( 14 / 18 )); // change from 18x18px to 14x14px
 }
